@@ -22,8 +22,6 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed('ui_up'):
 		velocity.y = -1000
-	elif Input.is_action_pressed('ui_down'):
-		velocity.y = 1000
 
 	move_and_slide(velocity + gravity, upDirection)
 	var collision = get_slide_count() > 0
@@ -36,7 +34,12 @@ func _physics_process(delta):
 		gravity.y += 40
 
 func _process(delta):
+	$AnimatedSprite.offset.y = 0
 	if jumping:
+		if Input.is_action_pressed('ui_right'):
+			$AnimatedSprite.flip_h = false
+		elif Input.is_action_pressed('ui_left'):
+			$AnimatedSprite.flip_h = true
 		$AnimatedSprite.play("Jump")
 	elif Input.is_action_pressed('ui_right'):
 		$AnimatedSprite.flip_h = false
@@ -44,6 +47,9 @@ func _process(delta):
 	elif Input.is_action_pressed('ui_left'):
 		$AnimatedSprite.flip_h = true
 		$AnimatedSprite.play("Walk")
+	elif Input.is_action_pressed('ui_down'):
+		$AnimatedSprite.play("Duck")
+		$AnimatedSprite.offset.y = 22
 	else:
 		$AnimatedSprite.play("Idle")
 
