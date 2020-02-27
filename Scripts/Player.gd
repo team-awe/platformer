@@ -3,8 +3,6 @@ extends KinematicBody2D
 const gravityConstant = 400
 const speedLimit = 500
 const speedFactor = 5
-const upDirection = Vector2(0, -1)
-const floorMaxAngle = 0.8
 
 var jumping = false
 var velocity = Vector2()
@@ -14,7 +12,7 @@ func _physics_process(_delta):
 	var left = Input.is_action_pressed('ui_left')
 	var right = Input.is_action_pressed('ui_right')
 	var up = Input.is_action_pressed('ui_up')
-	
+
 	if right:
 		velocity.x += (speedLimit - velocity.x) / speedFactor
 	elif left:
@@ -25,7 +23,7 @@ func _physics_process(_delta):
 			velocity.x = 0
 
 	if up:
-		velocity.y = -1000
+		velocity.y = -1500
 
 	# move_and_slide(
 	#	velocity vector, up direction, slide on slopes?,
@@ -33,9 +31,9 @@ func _physics_process(_delta):
 	#	maximum angle to count as floor in radians,
 	#	infinite inertia?
 	# )
-	var movement = move_and_slide(velocity + gravity, upDirection, true, 4, floorMaxAngle, true)
-	var posLabel = get_node('/root/Game/PositionLabel')
-	posLabel.text = str(round(movement.x)) + ':' + str(round(movement.y))
+	var movement = move_and_slide(velocity + gravity, Vector2(0, -1), true, 2, 0.8, true)
+	$Camera2D/DebugLabel.text = str(round(movement.x)) + ':' + str(round(movement.y))
+
 	var collision = get_slide_count() > 0
 	if collision and is_on_floor():
 		gravity.y = gravityConstant
@@ -43,7 +41,7 @@ func _physics_process(_delta):
 		jumping = false
 	else:
 		jumping = true
-		gravity.y += 40
+		gravity.y += 50
 
 func _process(_delta):
 	var left = Input.is_action_pressed('ui_left')

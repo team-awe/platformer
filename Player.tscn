@@ -23,11 +23,6 @@ animations = [ {
 "name": "Walk",
 "speed": 30.0
 }, {
-"frames": [ ExtResource( 15 ) ],
-"loop": true,
-"name": "Idle",
-"speed": 30.0
-}, {
 "frames": [ ExtResource( 14 ) ],
 "loop": true,
 "name": "Jump",
@@ -37,6 +32,11 @@ animations = [ {
 "loop": true,
 "name": "Duck",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 15 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 30.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -55,3 +55,17 @@ centered = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0.225953, 38.1832 )
 shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 0, -150 )
+rotating = true
+current = true
+
+[node name="DebugLabel" type="Label" parent="Camera2D"]
+margin_left = -503.0
+margin_top = -438.0
+margin_right = -346.0
+margin_bottom = -339.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

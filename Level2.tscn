@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Landscape_Tiles.tres" type="TileSet" id=1]
+
+[node name="Level2" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="TileMap" type="TileMap" parent="StaticBody2D"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 70, 70 )
+collision_use_parent = true
+format = 1
+tile_data = PoolIntArray( 262148, 2, 4, 262149, 2, 4, 262150, 2, 4, 262151, 2, 4, 262152, 2, 4, 262153, 2, 4, 262154, 2, 4, 458752, 1, 196615, 458753, 1, 196615, 458754, 1, 196615, 458755, 1, 196615, 458756, 1, 196615, 458757, 1, 196615, 458758, 1, 196615, 458759, 1, 196615, 458760, 1, 196615, 458761, 1, 196615, 458762, 1, 196615, 458763, 1, 196615, 458764, 1, 196615, 458765, 1, 196616 )
