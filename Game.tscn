@@ -10,3 +10,10 @@ position = Vector2( 0, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 70, 465 )
+
+[node name="PositionLabel" type="Label" parent="."]
+margin_right = 149.0
+margin_bottom = 59.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
