@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Level1.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Level2.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Level3.tscn" type="PackedScene" id=4]
 
 [node name="World" type="Node2D"]
 
@@ -10,6 +11,9 @@
 
 [node name="Level2" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1120, 0 )
+
+[node name="Level3" parent="." instance=ExtResource( 4 )]
+position = Vector2( -31.2109, 855.552 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 70, 465 )
