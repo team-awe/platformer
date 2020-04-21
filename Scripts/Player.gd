@@ -1,23 +1,23 @@
 extends KinematicBody2D
 
-const gravity = 100
-const acceleration = 50
-const speedLimit = 500
-const fallingSpeedLimit = 1200
+const gravity = 2000
+const acceleration = 3000
+const jumpPower = 500
+const speedLimit = 700
+const fallingSpeedLimit = 2000
 
-var jumping = true
+var grounded = false
 
 var input = Vector2(0, 0)
-var velocity = Vector2(0, 0)
-#var gravity = Vector2(0, gravityConstant)
+var velocity = Vector2(0, 1)
 
-func _physics_process(_delta):
-	# Map inputs to velocity
+func _physics_process(delta):
 	var left = Input.is_action_pressed('ui_left')
 	var right = Input.is_action_pressed('ui_right')
 	var up = Input.is_action_pressed('ui_up')
 	var down = Input.is_action_pressed('ui_down')
 
+	# Map horizontal movement
 	input.x = 0
 	if right:
 		input.x += 1
@@ -25,69 +25,61 @@ func _physics_process(_delta):
 		input.x -= 1
 
 	if left or right:
-		velocity.x += input.x * acceleration
+		# Input is already normalized, since x is either 1, 0 or -1 and y is 0
+		velocity.x += input.x * acceleration * delta
 		if velocity.x > speedLimit:
 			velocity.x = speedLimit
 		elif velocity.x < -speedLimit:
 			velocity.x = -speedLimit
 	else:
-		velocity.x -= velocity.x / (acceleration * 0.1)
+		var before = velocity.x
+		velocity.x -= velocity.normalized().x * delta * (500 if down else acceleration)
+		var after = velocity.x
+		if before * after < 0:
+			velocity.x = 0
 
-	if up:
-		if not jumping:
-			velocity.y -= 1500
-
-	#Map gravity to velocity
-
-	if jumping:
-		velocity.y += gravity
+	# Map vertical movement
+	if grounded:
+		if up:
+			velocity.y -= jumpPower
+		else:
+			velocity.y = 1
 	else:
-		velocity.y = gravity
-	
-	if velocity.y > fallingSpeedLimit:
-		velocity.y = fallingSpeedLimit
+		velocity.y += gravity * delta
+		if velocity.y > fallingSpeedLimit:
+			velocity.y = fallingSpeedLimit
 
-	# Move
+	# Movement and Collision
 
-	# move_and_slide(
-	#	velocity vector, up direction, slide on slopes?,
-	#	maximum number of bounces per calculation,
-	#	maximum angle to count as floor in radians,
-	#	infinite inertia?
-	# )
-	var movement = move_and_slide(velocity, Vector2(0, -1), true, 2, 0.8, true)
+	# Automatic handling of collisions
+	# var _movement = move_and_slide(velocity, Vector2(0, -1), true, 2, 0.8, true)
+	# if get_slide_count() > 0 and is_on_floor():
+	# 	grounded = true
+	# else:
+	# 	grounded = false
 
-#	if right:
-#		velocity.x += (speedLimit - velocity.x) / speedFactor
-#	elif left:
-#		velocity.x -= (speedLimit + velocity.x) / speedFactor
-#	else:
-#		velocity.x = (velocity.x / speedFactor)
-#		if velocity.x < 1:
-#			velocity.x = 0
-
-#	if up:
-#		velocity.y = -1500
-
-	# move_and_slide(
-	#	velocity vector, up direction, slide on slopes?,
-	#	maximum number of bounces per calculation,
-	#	maximum angle to count as floor in radians,
-	#	infinite inertia?
-	# )
-#	var movement = move_and_slide(velocity + gravity, Vector2(0, -1), true, 2, 0.8, true)
-	$Camera2D/DebugLabel.text = 'x: ' + str(round(movement.x)) + '\n' + \
-								'y: ' + str(round(movement.y))
-
-	var collision = get_slide_count() > 0
+	# Manual handling of collisions
+	var collision = move_and_collide(velocity * delta)
 	if collision:
-		jumping = false
+		var collision_normal = collision.get_normal()
+
+		if collision_normal.y < -0.7:
+			grounded = true
+			velocity = velocity.slide(collision_normal)
+		else:
+			grounded = false
+			velocity = velocity.bounce(collision_normal)
 	else:
-		jumping = true
+		grounded = false
+
+	$Camera2D/DebugLabel.text = 'speed x: ' + str(round(velocity.x)) + '\n' + \
+								'speed y: ' + str(round(velocity.y)) + '\n' +\
+								'grounded: ' + str(grounded) + '\n' + \
+								'collision: ' + (str(collision.get_normal()) if collision else 'none')
 
 func _process(_delta):
 	if Input.is_action_pressed('ui_reset'):
-		get_tree().reload_current_scene()
+		var _tmp = get_tree().reload_current_scene()
 
 	var left = Input.is_action_pressed('ui_left')
 	var right = Input.is_action_pressed('ui_right')
@@ -100,7 +92,7 @@ func _process(_delta):
 
 	$AnimatedSprite.offset.y = 0
 
-	if jumping:
+	if not grounded:
 		$AnimatedSprite.play("Jump")
 	elif right || left:
 		$AnimatedSprite.play("Walk")

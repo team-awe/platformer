@@ -16,8 +16,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Test"
-run/main_scene="res://Game.tscn"
+run/main_scene="res://Menu.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/vsync/use_vsync=false
+window/energy_saving/keep_screen_on=false
 
 [gdnative]
 
@@ -33,4 +38,10 @@ ui_reset={
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation=0
+quality/intended_usage/framebuffer_allocation.mobile=0
+quality/filters/anisotropic_filter_level=1
+quality/filters/use_nearest_mipmap_filter=true
+quality/subsurface_scattering/quality=0
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
